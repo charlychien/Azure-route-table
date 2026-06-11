@@ -72,9 +72,7 @@ PrivateIP
 只讀現狀、計算 plan、把 before/after 兩份 JSON 存到 `./pe-routes-backups/`，不會動 Azure 上的資源：
 
 ```bash
-NVA_IP=10.20.0.4 \
-ROUTE_TABLE_ID=/subscriptions/<sub>/resourceGroups/rg-hub/providers/Microsoft.Network/routeTables/rt-nva-lan \
-  ./add-pe-routes.sh
+NVA_IP=10.20.0.4 ROUTE_TABLE_ID=/subscriptions/<sub>/resourceGroups/rg-hub/providers/Microsoft.Network/routeTables/rt-nva-lan ./add-pe-routes.sh
 ```
 
 輸出範例：
@@ -101,9 +99,7 @@ After  total routes:        493
 ### 2. 套用變更
 
 ```bash
-APPLY=1 NVA_IP=10.20.0.4 \
-ROUTE_TABLE_ID=/subscriptions/<sub>/resourceGroups/rg-hub/providers/Microsoft.Network/routeTables/rt-nva-lan \
-  ./add-pe-routes.sh
+APPLY=1 NVA_IP=10.20.0.4 ROUTE_TABLE_ID=/subscriptions/<sub>/resourceGroups/rg-hub/providers/Microsoft.Network/routeTables/rt-nva-lan ./add-pe-routes.sh
 ```
 
 執行前會自動把現狀存到 `./pe-routes-backups/<rt-name>-<ts>-before.json` 與 `latest-before.json`，再做一次 `PUT`。
@@ -113,18 +109,13 @@ ROUTE_TABLE_ID=/subscriptions/<sub>/resourceGroups/rg-hub/providers/Microsoft.Ne
 還原成最近一次「套用前」的狀態：
 
 ```bash
-APPLY=2 \
-ROUTE_TABLE_ID=/subscriptions/<sub>/resourceGroups/rg-hub/providers/Microsoft.Network/routeTables/rt-nva-lan \
-  ./add-pe-routes.sh
+APPLY=2 ROUTE_TABLE_ID=/subscriptions/<sub>/resourceGroups/rg-hub/providers/Microsoft.Network/routeTables/rt-nva-lan ./add-pe-routes.sh
 ```
 
 或還原成指定快照：
 
 ```bash
-APPLY=2 \
-BACKUP_FILE=./pe-routes-backups/rt-nva-lan-20260611T143000-before.json \
-ROUTE_TABLE_ID=... \
-  ./add-pe-routes.sh
+APPLY=2 BACKUP_FILE=./pe-routes-backups/rt-nva-lan-20260611T143000-before.json ROUTE_TABLE_ID=... ./add-pe-routes.sh
 ```
 
 ### 4. 自帶 IP 清單
@@ -132,19 +123,13 @@ ROUTE_TABLE_ID=... \
 蓋掉檔案預設、直接從環境變數丟進去：
 
 ```bash
-PE_IPS="10.0.92.4 10.0.93.132" \
-NVA_IP=10.20.0.4 \
-ROUTE_TABLE_ID=... \
-  ./add-pe-routes.sh
+PE_IPS="10.0.92.4 10.0.93.132" NVA_IP=10.20.0.4 ROUTE_TABLE_ID=... ./add-pe-routes.sh
 ```
 
 或指向別的檔案：
 
 ```bash
-PE_IPS_FILE=./other-case-ips.txt \
-NVA_IP=10.20.0.4 \
-ROUTE_TABLE_ID=... \
-  ./add-pe-routes.sh
+PE_IPS_FILE=./other-case-ips.txt NVA_IP=10.20.0.4 ROUTE_TABLE_ID=... ./add-pe-routes.sh
 ```
 
 ---
